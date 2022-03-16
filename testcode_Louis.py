@@ -14,7 +14,6 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import QPalette, QBrush, QPixmap
 import os
-import pandas as pd
 
 global number1
 number1 = 1
@@ -22,15 +21,9 @@ xtime1=time.localtime()
 print(xtime1)
 #fn= str(xtime1[0]) +"-" + str(xtime1[1]) +"-"+ str(xtime1[2]) + "-" + str(xtime1[3])+ ":" + str(xtime1[4])+'.xls'
 now_output_time = str(datetime.now().strftime('%Y-%m-%d'))
-
-fn= str(xtime1[0]) +"-" + str(xtime1[1]) +"-"+ str(xtime1[2]) + "-" + str(xtime1[3])+ ":" + str(xtime1[4])+'.xls'
-
-#建立當前資料夾
+fn= "./" + now_output_time + "/" + str(xtime1[0]) +"-" + str(xtime1[1]) +"-"+ str(xtime1[2])+'.xls'
 if not os.path.isdir("./"+now_output_time):
-    print("You have not create" + now_output_time)
     os.mkdir("./"+now_output_time)
-    print("Now Finish Save")
-
 def scan_qrcode(qrcode):
     data = pyzbar.decode(qrcode)
     return data[0].data.decode('utf-8')
@@ -61,7 +54,7 @@ class Ui_MainWindow(QtWidgets.QWidget):
         self.label = QtWidgets.QLabel('以下為灰階圖片方差')
         self.label1 = QtWidgets.QLabel('機台編號:')
         self.button_close = QtWidgets.QPushButton(u'退出')
-        self.button_test = QtWidgets.QPushButton(u'焦距檢測_Louis:')
+        self.button_test = QtWidgets.QPushButton(u'焦距檢測:')
         #self.button_sql = QtWidgets.QPushButton(u'開啟資料庫')
         self.button_sql1 = QtWidgets.QPushButton(u'儲存到資料庫')
         self.button_qrcode = QtWidgets.QPushButton(u'讀取QRcode')
@@ -83,11 +76,16 @@ class Ui_MainWindow(QtWidgets.QWidget):
         self.button_open_camera.setMinimumHeight(50)
         self.button_close.setMinimumHeight(50)
         self.button_test.setMinimumHeight(50)
+        #self.button_sql.setMinimumHeight(50)
         self.button_sql1.setMinimumHeight(50)
         self.button_qrcode.setMinimumHeight(50)
+        #self.button_test1.setMinimumHeight(50)
         self.label.setMinimumHeight(10)
         self.label1.setMinimumHeight(10)
+        #self.label1.setMinimumHeight(50)
         self.number.setMinimumHeight(10)
+        # self.button_close.move(300,300)
+        # move()方法移動視窗在螢幕上的位置到x = 300，y = 300座標。
         self.move(300, 300)
 
         # 資訊顯示
@@ -101,12 +99,13 @@ class Ui_MainWindow(QtWidgets.QWidget):
         self.__layout_fun_button.addWidget(self.label1)
         self.__layout_fun_button.addWidget(self.button_open_camera)
         self.__layout_fun_button.addWidget(self.label)
-
+        #self.__layout_fun_button.addWidget(self.label1)
+        #self.__layout_fun_button.addWidget(self.button_test1)
         self.__layout_fun_button.addWidget(self.number)
         self.__layout_fun_button.addWidget(self.button_test)
         self.__layout_fun_button.addWidget(self.button_qrcode)
         self.__layout_fun_button.addWidget(self.button_sql1)
-     
+        #self.__layout_fun_button.addWidget(self.button_sql)        
         self.__layout_fun_button.addWidget(self.button_close)
         self.__layout_fun_button.addWidget(self.label_move)
 
@@ -130,7 +129,7 @@ class Ui_MainWindow(QtWidgets.QWidget):
         self.timer_camera.timeout.connect(self.show_camera)
         self.button_close.clicked.connect(self.close)
         self.button_sql1.clicked.connect(self.button_sql1_click)
-
+        #self.button_sql.clicked.connect(self.button_sql_click)
         self.button_qrcode.clicked.connect(self.button_qrcode_click)
 
     def button_open_camera_click(self):
@@ -224,12 +223,12 @@ class Ui_MainWindow(QtWidgets.QWidget):
     
     def button_sql1_click(self):
         global number1
-        # xtime=time.localtime()
-        # time1 = str(xtime[0]) +"/" + str(xtime[1]) +"/"+ str(xtime[2]) + "-" + str(xtime[3]) + ":" + str(xtime[4]) 
+        
+        
+        xtime=time.localtime()
+        time1 = str(xtime[0]) +"/" + str(xtime[1]) +"/"+ str(xtime[2]) + "-" + str(xtime[3]) + ":" + str(xtime[4]) 
         #fn= str(xtime[0]) +"-" + str(xtime[1]) +"-"+ str(xtime[2]) +'.xls'
-        time1 = str(now_output_time)
-        # test10 = "./"+ now_output_time + "/"+str(xtime[0]) +"-" + str(xtime[1]) +"-"+ str(xtime[2]) + "-" + str(xtime[3]) + ":" + str(xtime[4]) + "-" + str(number1) +".png"
-        test10 = "./"+ now_output_time + "/"+ now_output_time +".png"
+        test10 = "./" + now_output_time + "/" + str(xtime[0]) +"-" + str(xtime[1]) +"-"+ str(xtime[2]) + "-" + str(xtime[3]) + ":" + str(xtime[4]) + "-" + str(number1) +".png"
         cv2.imwrite(test10, show)
 
         if number1 == 1:
