@@ -8,17 +8,26 @@ import xlrd
 from xlutils.copy import copy
 from pyzbar import pyzbar
 import time
-
+from datetime import datetime
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import QPalette, QBrush, QPixmap
 import os
+import pandas as pd
 
 global number1
 number1 = 1
 xtime1=time.localtime()
+print(xtime1)
+#fn= str(xtime1[0]) +"-" + str(xtime1[1]) +"-"+ str(xtime1[2]) + "-" + str(xtime1[3])+ ":" + str(xtime1[4])+'.xls'
+now_output_time = str(datetime.now().strftime('%Y-%m-%d'))
 fn= str(xtime1[0]) +"-" + str(xtime1[1]) +"-"+ str(xtime1[2]) + "-" + str(xtime1[3])+ ":" + str(xtime1[4])+'.xls'
+
+#建立當前資料夾
+if not os.path.isdir("./"+now_output_time):
+
+    os.mkdir("./"+now_output_time)
 def scan_qrcode(qrcode):
     data = pyzbar.decode(qrcode)
     return data[0].data.decode('utf-8')
@@ -49,7 +58,7 @@ class Ui_MainWindow(QtWidgets.QWidget):
         self.label = QtWidgets.QLabel('以下為灰階圖片方差')
         self.label1 = QtWidgets.QLabel('機台編號:')
         self.button_close = QtWidgets.QPushButton(u'退出')
-        self.button_test = QtWidgets.QPushButton(u'焦距檢測:')
+        self.button_test = QtWidgets.QPushButton(u'焦距檢測_Louis:')
         #self.button_sql = QtWidgets.QPushButton(u'開啟資料庫')
         self.button_sql1 = QtWidgets.QPushButton(u'儲存到資料庫')
         self.button_qrcode = QtWidgets.QPushButton(u'讀取QRcode')
@@ -163,11 +172,7 @@ class Ui_MainWindow(QtWidgets.QWidget):
         fm =int(fm)
         self.number.display(fm)
         global fm1
-        if(fm>100 and fm<200):
-            self.button_test.setText(u'焦距檢測:自動儲存')
-            self.button_test.setStyleSheet("QPushButton{color:green}")
-            fm1 = "AutoSave"
-        elif(fm>200):
+        if(fm>100):
             self.button_test.setText(u'焦距檢測:對焦成功')
             self.button_test.setStyleSheet("QPushButton{color:green}")
             fm1 = "Pass"
@@ -221,14 +226,13 @@ class Ui_MainWindow(QtWidgets.QWidget):
     
     
     def button_sql1_click(self):
-
-        
         global number1
+        
         
         xtime=time.localtime()
         time1 = str(xtime[0]) +"/" + str(xtime[1]) +"/"+ str(xtime[2]) + "-" + str(xtime[3]) + ":" + str(xtime[4]) 
         #fn= str(xtime[0]) +"-" + str(xtime[1]) +"-"+ str(xtime[2]) +'.xls'
-        test10= str(xtime[0]) +"-" + str(xtime[1]) +"-"+ str(xtime[2]) + "-" + str(xtime[3]) + ":" + str(xtime[4]) + "-" + str(number1) +".png"
+        test10 = "./"+ now_output_time + "/"+str(xtime[0]) +"-" + str(xtime[1]) +"-"+ str(xtime[2]) + "-" + str(xtime[3]) + ":" + str(xtime[4]) + "-" + str(number1) +".png"
         cv2.imwrite(test10, show)
 
         if number1 == 1:
@@ -259,6 +263,8 @@ class Ui_MainWindow(QtWidgets.QWidget):
             number1 = number1+1
             wt.save(fn)
         
+        
+    
     def button_sql_click(self):
         fn = '2021-10-15.xls'
         wb = xlrd.open_workbook(fn)
@@ -281,6 +287,8 @@ class Ui_MainWindow(QtWidgets.QWidget):
             print(qrcode)
     
         
+
+
 if __name__ == "__main__":
     App = QApplication(sys.argv)
     ex = Ui_MainWindow()

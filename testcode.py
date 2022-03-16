@@ -8,7 +8,7 @@ import xlrd
 from xlutils.copy import copy
 from pyzbar import pyzbar
 import time
-
+from datetime import datetime
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -18,7 +18,12 @@ import os
 global number1
 number1 = 1
 xtime1=time.localtime()
+print(xtime1)
+#fn= str(xtime1[0]) +"-" + str(xtime1[1]) +"-"+ str(xtime1[2]) + "-" + str(xtime1[3])+ ":" + str(xtime1[4])+'.xls'
+now_output_time = str(datetime.now().strftime('%Y-%m-%d'))
 fn= str(xtime1[0]) +"-" + str(xtime1[1]) +"-"+ str(xtime1[2]) + "-" + str(xtime1[3])+ ":" + str(xtime1[4])+'.xls'
+if not os.path.isdir("./"+now_output_time):
+    os.mkdir("./"+now_output_time)
 def scan_qrcode(qrcode):
     data = pyzbar.decode(qrcode)
     return data[0].data.decode('utf-8')
@@ -223,7 +228,7 @@ class Ui_MainWindow(QtWidgets.QWidget):
         xtime=time.localtime()
         time1 = str(xtime[0]) +"/" + str(xtime[1]) +"/"+ str(xtime[2]) + "-" + str(xtime[3]) + ":" + str(xtime[4]) 
         #fn= str(xtime[0]) +"-" + str(xtime[1]) +"-"+ str(xtime[2]) +'.xls'
-        test10= str(xtime[0]) +"-" + str(xtime[1]) +"-"+ str(xtime[2]) + "-" + str(xtime[3]) + ":" + str(xtime[4]) + "-" + str(number1) +".png"
+        test10 = "./"+ now_output_time + "/"+str(xtime[0]) +"-" + str(xtime[1]) +"-"+ str(xtime[2]) + "-" + str(xtime[3]) + ":" + str(xtime[4]) + "-" + str(number1) +".png"
         cv2.imwrite(test10, show)
 
         if number1 == 1:
@@ -257,7 +262,7 @@ class Ui_MainWindow(QtWidgets.QWidget):
         
     
     def button_sql_click(self):
-        fn = '2021-10-15.xlsx'
+        fn = '2021-10-15.xls'
         wb = xlrd.open_workbook(fn)
         sh = wb.sheets()[0]
         rows = sh.nrows
